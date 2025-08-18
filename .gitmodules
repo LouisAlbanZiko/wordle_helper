@@ -1,0 +1,3 @@
+[submodule "web/hermes"]
+	path = web/hermes
+	url = git@github.com:LouisAlbanZiko/hermes.git

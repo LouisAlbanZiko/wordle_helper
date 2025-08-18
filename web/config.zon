@@ -1,0 +1,13 @@
+.{
+    .client_timeout_s = 120,
+    .poll_timeout_s = 25,
+    .data_dir = "data/",
+    .http = .{
+        .port = 3280,
+    },
+    .https = .{
+        .port = 8443,
+        .cert = "localhost.crt",
+        .key = "localhost.key",
+    },
+}

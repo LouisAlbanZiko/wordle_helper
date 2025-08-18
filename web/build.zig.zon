@@ -1,0 +1,16 @@
+.{
+    .name = .wordle_helper,
+    .version = "0.1.0",
+    .fingerprint = 0x2d431f3db4853583, // Changing this has security and trust implications.
+    .minimum_zig_version = "0.14.0",
+    .dependencies = .{
+        .hermes = .{
+            .path = "hermes",
+        },
+    },
+    .paths = .{
+        "www",
+        "build.zig",
+        "build.zig.zon",
+    },
+}
