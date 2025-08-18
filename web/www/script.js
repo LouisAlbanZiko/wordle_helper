@@ -180,11 +180,11 @@ function remove_letter() {
 			let index = 0;
 			for (const cell of row.children) {
 				if (cell.innerHTML.length === 0) {
-					index -= 1;
 					break;
 				}
 				index += 1;
 			}
+			index -= 1;
 			if (index >= 0) {
 				ccell = row.children[index];
 			}
