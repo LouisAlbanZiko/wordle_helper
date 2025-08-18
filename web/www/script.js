@@ -111,7 +111,9 @@ function insert_letter(c) {
 	if (c.length !== 1) return false;
 	
 	let ccell = null;
+	let acell = null;
 	const grid = document.getElementById("grid");
+	let row_index = 0;
 	for (const row of grid.children) {
 		if (!row.hasAttribute("revealed")) {
 			let index = 0;
@@ -123,17 +125,26 @@ function insert_letter(c) {
 			}
 			if (index !== 5) {
 				ccell = row.children[index];
+				if (row_index > 0) {
+					acell = grid.children[row_index - 1].children[index];
+				}
 			}
 			break;
 		}
+		row_index += 1;
 	}
 	if (ccell === null) {
 		console.log("No empty cell found.");
 		return false;
 	}
 	ccell.innerHTML = c;
-	ccell.style.backgroundColor = colors[0];
-	ccell.style.borderColor = colors[0];
+	if (acell !== null && acell.style.backgroundColor === colors[2] && acell.innerHTML === ccell.innerHTML) {
+		ccell.style.backgroundColor = colors[2];
+		ccell.style.borderColor = colors[2];
+	} else {
+		ccell.style.backgroundColor = colors[0];
+		ccell.style.borderColor = colors[0];
+	}
 	ccell.addEventListener('click', (e) => {
 		const color = e.currentTarget.style.backgroundColor;
 		let index = colors.findIndex((element) => element === color);
