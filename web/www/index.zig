@@ -122,8 +122,8 @@ pub fn http_POST(ctx: http.Context, req: *const http.Request) std.mem.Allocator.
                     \\<ol>
                     , .{});
                 
-                var max_count: u64 = session.cword_count;
-                if (session.cword_count > 10) {
+                var max_count: u64 = 10;
+                if (session.cword_count < 10) {
                     max_count = session.cword_count;
                 }
                 var wcount: u64 = 0;
