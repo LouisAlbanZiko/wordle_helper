@@ -81,7 +81,7 @@ async function validate_row() {
 		}
 		// calculate
 		const recommended = document.getElementById("recommended");
-		recommended.innerHTML = "";
+		recommended.innerHTML = '<div class="loader"></div>';
 		
 		const body = {
 			pattern: pattern,
