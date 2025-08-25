@@ -65,18 +65,29 @@ async function validate_row() {
 			const color = cell.style.backgroundColor;
 			const color_index = colors.findIndex((element) => element === color);
 			
-			const current_color_index = colors.findIndex((element) => element === key.style.backgroundColor);
-			if (current_color_index < color_index) {
-				key.style.backgroundColor = color;
-			}
-			if (color_index == 0) {
+			if (color_index === 0) {
 				pattern += "!";
-				keys_enabled[c] = false;
-				key.outerHTML = key.outerHTML;
-			} else if (color_index == 1) {
+			} else if (color_index === 1) {
 				pattern += "?";
-			} else if (color_index == 2) {
+			} else if (color_index === 2) {
 				pattern += "=";
+			}
+
+			const current_color_index = colors.findIndex((element) => element === key.style.backgroundColor);
+			if (current_color_index === 0) {
+				// skip
+			} else if (current_color_index === 1) {
+				if (color_index === 2) {
+					key.style.backgroundColor = colors[2];
+				}
+			} else if (current_color_index === 2) {
+				// skip
+			} else {
+				key.style.backgroundColor = colors[color_index];
+				if (color_index == 0) {
+					keys_enabled[c] = false;
+					key.outerHTML = key.outerHTML;
+				}
 			}
 		}
 		// calculate
@@ -99,7 +110,6 @@ async function validate_row() {
 			const error_text = await response.text();
 			recommended.innerHTML = `<div style="color: red">${error_text}<div>`;
 		}
-
 	}
 }
 

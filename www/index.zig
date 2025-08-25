@@ -2,30 +2,28 @@ const std = @import("std");
 const server = @import("server");
 const http = server.http;
 
-const helper = @import("helper");
-
-const WORDS = @import("/words.zig");
+const words = @import("/words.zig");
 
 pub fn http_GET(ctx: http.Context, req: *const http.Request) std.mem.Allocator.Error!http.Response {
     if (req.cookies.get("session_id")) |session_id| {
-        WORDS.remove_session(session_id);
+        words.remove_session(session_id);
     }
 
     var headers = std.ArrayList(http.Header).init(ctx.arena);
     
-    const session_id = try WORDS.new_session();
+    const session_id = try words.new_session();
     const session_id_cookie = try std.fmt.allocPrint(ctx.arena, "session_id={s};", .{session_id});
     try headers.append(http.Header{ "Set-Cookie", session_id_cookie });
     try headers.append(http.Header{ "Content-Type", @tagName(.@"text/html")});
 
     var help_panel = std.ArrayList(u8).init(ctx.arena);
     try std.fmt.format(help_panel.writer(), 
-        \\Recommended:
+        \\Recommended (10 / {d}):
         \\<ol>
-        , .{});
+        , .{words.WORDS.len});
     for (0..10) |i| {
-        const w = WORDS.WORDS[WORDS.WORDS.len - 1 - i];
-        try std.fmt.format(help_panel.writer(), "<li>{s}: {d}</li>", .{w.word, w.info});
+        const w = words.WORDS[i];
+        try std.fmt.format(help_panel.writer(), "<li>{s}: {d:.2}</li>", .{w.str, w.info});
     }
     try help_panel.appendSlice("</ol>");
 
@@ -43,7 +41,7 @@ pub fn http_GET(ctx: http.Context, req: *const http.Request) std.mem.Allocator.E
 
 pub fn http_POST(ctx: http.Context, req: *const http.Request) std.mem.Allocator.Error!http.Response {
     if (req.cookies.get("session_id")) |session_id| {
-        if (WORDS.get_session(session_id)) |session| {
+        if (words.get_session(session_id)) |session| {
             const Guess = struct {
                 word: []const u8,
                 pattern: []const u8,
@@ -59,91 +57,43 @@ pub fn http_POST(ctx: http.Context, req: *const http.Request) std.mem.Allocator.
                 };
             };
             const guess = json_guess.value;
-            var word: [8]u8 = undefined;
-            for (0..5) |i| {
-                word[i] = guess.word[i];
-            }
-            word[5] = 0;
-            word[6] = 0;
-            word[7] = 0;
 
-            var pattern: [5]u8 = undefined;
-            for (0..5) |i| {
-                switch (guess.pattern[i]) {
-                    '!' => {
-                        pattern[i] = 0;
-                    },
-                    '?' => {
-                        pattern[i] = 1;
-                    },
-                    '=' => {
-                        pattern[i] = 2;
-                    },
-                    else => {
-                        const message = "Invalid character in pattern";
-                        return http.Response{
-                            .code = .@"400 Bad Request",
-                            .headers = &[_]http.Header{
-                                .{ "Content-Type", @tagName(http.ContentType.@"text/plain")},
-                            },
-                            .body = message,
-                        };
-                    }
-                }
-            }
-            WORDS.step(
+            words.step(
                 session,
                 guess.word,
-                pattern,
+                guess.pattern,
             );
 
-            var res_code: http.Code = .@"200 Ok";
             var help_panel = std.ArrayList(u8).init(ctx.arena);
-            if (session.cword_count == 0) {
+            if (session.words.len == 0) {
                 try std.fmt.format(help_panel.writer(), "No word found!", .{});
-            } else if (session.cword_count == 1) {
-                var has_word: ?[]const u8 = null;
-                for (0..session.words.len) |i| {
-                    const w = session.words[session.words.len - 1 - i];
-                    if (helper.c.word_disabled(&w) == 0) {
-                        has_word = &w;
-                        break;
-                    }
-                }
-                if (has_word) |w| {
-                    try std.fmt.format(help_panel.writer(), "Word found: {s}", .{w});
-                } else {
-                    res_code = .@"500 Internal Server Error";
-                    try std.fmt.format(help_panel.writer(), "Server Error. No word found!", .{});
-                }
+            } else if (session.words.len == 1) {
+                try std.fmt.format(help_panel.writer(), "Word found: {s}", .{session.words[0].str});
             } else {
-                try std.fmt.format(help_panel.writer(), 
-                    \\Recommended:
-                    \\<ol>
-                    , .{});
-                
                 var max_count: u64 = 10;
-                if (session.cword_count < 10) {
-                    max_count = session.cword_count;
+                if (session.words.len < 10) {
+                    max_count = session.words.len;
                 }
+
+                try std.fmt.format(help_panel.writer(), 
+                    \\Recommended ({d} / {d}):
+                    \\<ol>
+                    , .{max_count, session.words.len});
+                
                 var wcount: u64 = 0;
                 for (0..session.words.len) |i| {
-                    const w = session.words[session.words.len - 1 - i];
-                    const info = session.infos[session.infos.len - 1 - i];
-                    if (helper.c.word_disabled(&w) == 0) {
-                        const w1: [8]u8 = @bitCast(w);
-                        try std.fmt.format(help_panel.writer(), "<li>{s}: {d}</li>", .{&w1, info});
-                        wcount += 1;
-                        if (wcount >= max_count) {
-                            break;
-                        }
+                    const w = session.words[i];
+                    try std.fmt.format(help_panel.writer(), "<li>{s}: {d:.2}</li>", .{w.str, w.info});
+                    wcount += 1;
+                    if (wcount >= max_count) {
+                        break;
                     }
                 }
                 try help_panel.appendSlice("</ol>");
             }
 
             return http.Response{
-                .code = res_code,
+                .code = .@"200 Ok",
                 .headers = &[_]http.Header{
                     http.Header{ "Content-Type", @tagName(http.ContentType.@"text/html") },
                 },
