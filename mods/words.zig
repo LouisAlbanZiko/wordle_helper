@@ -4,10 +4,12 @@ const wh = @import("wh");
 pub const WORDS: []const wh.Word = @alignCast(std.mem.bytesAsSlice(wh.Word, @embedFile("infos.bin")));
 
 pub const SessionData = struct {
+    _data: []wh.Word,
     words: []wh.Word,
     pub fn init() std.mem.Allocator.Error!SessionData {
         var session_data: SessionData = undefined;
         session_data.words = try g_alloc.dupe(wh.Word, WORDS);
+        session_data._data = session_data.words;
         return session_data;
     }
 };
@@ -29,7 +31,7 @@ pub fn new_session() ![]const u8 {
 pub fn remove_session(session_id: []const u8) void {
     if (sessions_data.fetchRemove(session_id)) |kv| {
         g_alloc.free(kv.key);
-        g_alloc.free(kv.value.words);
+        g_alloc.free(kv.value._data);
     }
 }
 
