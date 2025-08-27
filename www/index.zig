@@ -18,12 +18,12 @@ pub fn http_GET(ctx: http.Context, req: *const http.Request) std.mem.Allocator.E
 
     var help_panel = std.ArrayList(u8).init(ctx.arena);
     try std.fmt.format(help_panel.writer(), 
-        \\Recommended (10 / {d}):
+        \\<h2>Recommended (10 / {d}):</h2>
         \\<ol>
         , .{words.WORDS.len});
     for (0..10) |i| {
         const w = words.WORDS[i];
-        try std.fmt.format(help_panel.writer(), "<li>{s}: {d:.2}</li>", .{w.str, w.info});
+        try std.fmt.format(help_panel.writer(), "<li><span class=\"word\">{s}</span><span class=\"info\">({d:.2})</span></li>", .{w.str, w.info});
     }
     try help_panel.appendSlice("</ol>");
 
@@ -66,9 +66,9 @@ pub fn http_POST(ctx: http.Context, req: *const http.Request) std.mem.Allocator.
 
             var help_panel = std.ArrayList(u8).init(ctx.arena);
             if (session.words.len == 0) {
-                try std.fmt.format(help_panel.writer(), "No word found!", .{});
+                try std.fmt.format(help_panel.writer(), "<h2>No word found!</h2>", .{});
             } else if (session.words.len == 1) {
-                try std.fmt.format(help_panel.writer(), "Word found: {s}", .{session.words[0].str});
+                try std.fmt.format(help_panel.writer(), "<h2>Word found: <span class=\"word\">{s}</span></h2>", .{session.words[0].str});
             } else {
                 var max_count: u64 = 10;
                 if (session.words.len < 10) {
@@ -76,14 +76,14 @@ pub fn http_POST(ctx: http.Context, req: *const http.Request) std.mem.Allocator.
                 }
 
                 try std.fmt.format(help_panel.writer(), 
-                    \\Recommended ({d} / {d}):
+                    \\<h2>Recommended ({d} / {d}):</h2>
                     \\<ol>
                     , .{max_count, session.words.len});
                 
                 var wcount: u64 = 0;
                 for (0..session.words.len) |i| {
                     const w = session.words[i];
-                    try std.fmt.format(help_panel.writer(), "<li>{s}: {d:.2}</li>", .{w.str, w.info});
+                    try std.fmt.format(help_panel.writer(), "<li><span class=\"word\">{s}</span><span class=\"info\">({d:.2})</span></li>", .{w.str, w.info});
                     wcount += 1;
                     if (wcount >= max_count) {
                         break;

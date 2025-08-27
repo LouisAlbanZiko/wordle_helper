@@ -2,12 +2,37 @@
 <html>
 	<head>
 		<title>Wordle Helper</title>
-		<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
 <style>
+html, body {
+	padding: 0;
+	margin: 0;
+}
 html {
 	background-color: #161616;
 	font-family: "Courier New", Courier, monospace;
 	font-weight: bold;
+}
+#recommended ol {
+	list-style-type: none;
+}
+#recommended li {
+	font-family: "Liberation Mono", monospace;
+	font-size: 24px;
+	list-style-type: none;
+	line-height: 150%;
+	
+	display: flex;
+	flex-direction: row;
+	gap: 30px;
+}
+#recommended .word {
+	text-transform: uppercase;
+	font-weight: 300;
+}
+#recommended li .info {
+	font-weight: 100;
+	color: #818384;
 }
 .row .square {
 	display: block flex;
@@ -67,95 +92,98 @@ button.key {
 }
 </style>
 	</head>
-	<body style="display: flex; flex-direction: column; gap: 20px;">
-		<div id="grid" style="display: inline flex; flex-direction: column; margin: auto;">
-			<div class="row">
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-			</div>
-			<div class="row">
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-			</div>
-			<div class="row">
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-			</div>
-			<div class="row">
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-			</div>
-			<div class="row">
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-			</div>
-			<div class="row">
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-				<div class="square"></div>
-			</div>
-		</div>
-		<div id="keyboard" style="display: flex; flex-direction: column; margin: auto; gap: 6px;">
-			<div class="row">
-				<button class="key">Q</button>
-				<button class="key">W</button>
-				<button class="key">E</button>
-				<button class="key">R</button>
-				<button class="key">T</button>
-				<button class="key">Y</button>
-				<button class="key">U</button>
-				<button class="key">I</button>
-				<button class="key">O</button>
-				<button class="key">P</button>
-			</div>
-			<div class="row">
-				<button class="key">A</button>
-				<button class="key">S</button>
-				<button class="key">D</button>
-				<button class="key">F</button>
-				<button class="key">G</button>
-				<button class="key">H</button>
-				<button class="key">J</button>
-				<button class="key">K</button>
-				<button class="key">L</button>
-			</div>
-			<div class="row">
-				<button class="key" style="font-size: 12px;">ENTER</button>
-				<button class="key">Z</button>
-				<button class="key">X</button>
-				<button class="key">C</button>
-				<button class="key">V</button>
-				<button class="key">B</button>
-				<button class="key">N</button>
-				<button class="key">M</button>
-				<button class="key">
-					<div style="display: flex; justify-content: center; margin: auto 8px;">
-						<img height="16px" src="/backspace.svg"/>
+	<body style="display: flex; flex-direction: column; gap: 20px; height: 100vh;">
+		<div style="display: flex; flex-direction: row; margin: auto 0; gap: 0px;">
+			<div style="display: flex; flex-direction: column; margin: auto; gap: 20px; width: 50%;">
+				<div id="grid" style="display: inline flex; flex-direction: column; margin: auto;">
+					<div class="row">
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
 					</div>
-				</button>
+					<div class="row">
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+					</div>
+					<div class="row">
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+					</div>
+					<div class="row">
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+					</div>
+					<div class="row">
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+					</div>
+					<div class="row">
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+						<div class="square"></div>
+					</div>
+				</div>
+				<div id="keyboard" style="display: flex; flex-direction: column; margin: auto; gap: 6px;">
+					<div class="row">
+						<button class="key">Q</button>
+						<button class="key">W</button>
+						<button class="key">E</button>
+						<button class="key">R</button>
+						<button class="key">T</button>
+						<button class="key">Y</button>
+						<button class="key">U</button>
+						<button class="key">I</button>
+						<button class="key">O</button>
+						<button class="key">P</button>
+					</div>
+					<div class="row">
+						<button class="key">A</button>
+						<button class="key">S</button>
+						<button class="key">D</button>
+						<button class="key">F</button>
+						<button class="key">G</button>
+						<button class="key">H</button>
+						<button class="key">J</button>
+						<button class="key">K</button>
+						<button class="key">L</button>
+					</div>
+					<div class="row">
+						<button class="key" style="font-size: 12px;">ENTER</button>
+						<button class="key">Z</button>
+						<button class="key">X</button>
+						<button class="key">C</button>
+						<button class="key">V</button>
+						<button class="key">B</button>
+						<button class="key">N</button>
+						<button class="key">M</button>
+						<button class="key">
+							<div style="display: flex; justify-content: center; margin: auto 8px;">
+								<img height="16px" src="/backspace.svg"/>
+							</div>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div id="recommended" style="margin: auto; width: 50%;">
+				{{help_panel}}
 			</div>
 		</div>
-		<div id="recommended" style="margin: auto;">
-			{{help_panel}}
-		</div>
-
 		<script src="/script.js"></script>
 	</body>
 </html>
