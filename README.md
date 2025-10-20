@@ -7,6 +7,6 @@ Then type enter and the server will calculate the words that fit and out of thos
 
 The algorithm for determining the best guess is taken from this [video by 3Blue1Brown](https://www.youtube.com/watch?v=v68zYyaEmEA).
 
-The application is hosted at [wordlehelper.louisalbanziko.com](wordlehelper.louisalbanziko.com).
+The application is hosted at [wordlehelper.louisalbanziko.com](https://wordlehelper.louisalbanziko.com).
 
 This project uses [hermes](https://github.com/LouisAlbanZiko/hermes), my webserver written in Zig, as a backend.
