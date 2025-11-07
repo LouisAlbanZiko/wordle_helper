@@ -1,8 +1,0 @@
-.zig-cache/
-zig-out/
-www/
-*.sqlite
-*.db
-*.crt
-*.key
-*.pem
