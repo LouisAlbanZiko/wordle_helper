@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Wordle Helper</title>
+		<title>Wordle Solver</title>
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
 <style>
 html, body {

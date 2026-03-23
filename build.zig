@@ -18,7 +18,7 @@ pub fn build(b: *std.Build) void {
 
     switch (project) {
         .web => {
-            const exe_name: []const u8 = "wordle_helper";
+            const exe_name: []const u8 = "wordle_solver";
 
             const hermes = b.dependency("hermes", .{
                 .target = target,
