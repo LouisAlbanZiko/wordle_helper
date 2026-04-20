@@ -99,7 +99,7 @@ async function validate_row() {
 			word: guess.toLowerCase(),
 		};
 
-		const response = await fetch('/', {
+		const response = await fetch('./', {
 			method: "POST",
 			body: JSON.stringify(body),
 		});

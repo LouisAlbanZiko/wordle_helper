@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>Wordle Solver</title>
-		<link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
+		<link rel="icon" href="./favicon.svg" type="image/svg+xml"/>
 <style>
 html, body {
 	padding: 0;
@@ -174,7 +174,7 @@ button.key {
 						<button class="key">M</button>
 						<button class="key">
 							<div style="display: flex; justify-content: center; margin: auto 8px;">
-								<img height="16px" src="/backspace.svg"/>
+								<img height="16px" src="./backspace.svg"/>
 							</div>
 						</button>
 					</div>
@@ -184,6 +184,6 @@ button.key {
 				{{help_panel}}
 			</div>
 		</div>
-		<script src="/script.js"></script>
+		<script src="./script.js"></script>
 	</body>
 </html>
