@@ -1,3 +1,11 @@
+function closeHelp() {
+	const help = document.getElementById("help");
+	help.style.display = 'none';
+}
+function openHelp() {
+	const help = document.getElementById("help");
+	help.style.display = 'block';
+}
 
 const keys_enabled = {};
 document.addEventListener("keydown", (e) => {
